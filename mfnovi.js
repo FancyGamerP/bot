@@ -11,7 +11,7 @@ function rand(max, round = true) { return (round == 0) ? max * Math.random() : M
 let log = console.log
 let diffdata = {
     'reach': { 'noob': 1.5, 'easy': 2, 'normal': 2.5, 'hard': 3, 'hacker': 3.2 }, // e
-    'jump': { 'noob': 0, 'easy': 0.1, 'normal': 0.2, 'hard': 0.5, 'hacker': 1 },
+    'jump': { 'noob': 0, 'easy': 0.0, 'normal': 0.15, 'hard': 0.35, 'hacker': 1 },
     'crit': { 'noob': 0, 'easy': 0, 'normal': 0.15, 'hard': 0.5, 'hacker': 1 },
     'chances': { 'noob': 0.574, 'easy': 0.659 , 'normal':  0.757, 'hard': 0.87, 'hacker': 1 }
 }
