@@ -38,12 +38,12 @@ bot.on('chat', (username, msg, translate, jsonMsg, matches) => {
             break;
         case '!equip':
             bot.inventory.items().forEach(async (item) => {
-                if (item.name.includes('boots')) bot.waitForTicks(0).then(() => { bot.equip(item, 'feet') })
-                if (item.name.includes('leggings')) bot.waitForTicks(4).then(() => { bot.equip(item, 'legs') })
-                if (item.name.includes('chestplate')) bot.waitForTicks(8).then(() => { bot.equip(item, 'torso') })
-                if (item.name.includes('helmet')) bot.waitForTicks(12).then(() => { bot.equip(item, 'head') })
-                if (item.name.includes('sword') || item.name.includes('axe')) bot.waitForTicks(16).then(() => { bot.equip(item, 'hand') })
-                if (item.name.includes('totem') || item.name.includes('shield')) bot.waitForTicks(20).then(() => { bot.equip(item, 'off-hand') })
+                if (item.name.includes('boots')) bot.waitForTicks(0).then(() => { bot.equip(item, 'feet').catch(()=>{}) })
+                if (item.name.includes('leggings')) bot.waitForTicks(4).then(() => { bot.equip(item, 'legs').catch(()=>{}) })
+                if (item.name.includes('chestplate')) bot.waitForTicks(8).then(() => { bot.equip(item, 'torso').catch(()=>{}) })
+                if (item.name.includes('helmet')) bot.waitForTicks(12).then(() => { bot.equip(item, 'head').catch(()=>{}) })
+                if (item.name.includes('sword') || item.name.includes('axe')) bot.waitForTicks(16).then(() => { bot.equip(item, 'hand').catch(()=>{}) })
+                if (item.name.includes('totem') || item.name.includes('shield')) bot.waitForTicks(20).then(() => { bot.equip(item, 'off-hand').catch(()=>{}) })
             })
             break;
         case '!eat':
