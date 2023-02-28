@@ -20,6 +20,7 @@ bot.on('spawn', (e) => {
     bot.waitForChunksToLoad().then(botloop)
 })
 bot.on('chat', (username, msg, translate, jsonMsg, matches) => {
+	console.log("Client message: "+msg)
     switch (msg) {
         case '!move':
             botstat.moving = 1; log('moving')
