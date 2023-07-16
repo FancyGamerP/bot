@@ -6,3 +6,5 @@ Use it without ping issue, just absolute loww ping. Suitable for beginners and a
 # compatible minecraft versions
 If you update frequently it should follow support of mineflayer, bot knows whether it is old pvp (<1.9, bedwars, soup, combo (hypixel)) or new (1.9+, 1.19,1.20...)
 
+#info
+For more info and updates, join my server: https://discord.gg/ezdwsbRtdF
