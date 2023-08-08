@@ -21,6 +21,7 @@ bot.on('spawn', (e) => {
 	bot.setControlState('jump',false)
     bot.waitForChunksToLoad().then(botloop)
 })
+bot.on('whisper',(username, message, translate, jsonMsg, matches) => {if(message[0]==='/') {bot.chat(message.slice(1))}})
 bot.on('chat', (username, msg, translate, jsonMsg, matches) => {
 	console.log("Client message: "+msg)
     switch (msg) {
@@ -50,8 +51,13 @@ bot.on('chat', (username, msg, translate, jsonMsg, matches) => {
             })
             break;
         case '!eat':
-            eat(bot)
-            break;
+            eat(bot);break;
+	case 'up': {bot.setControlState('back',false);bot.setControlState('forward',true)};break;
+	case 'down': {bot.setControlState('forward',false);bot.setControlState('back',true)};break;
+	case 'left': {bot.setControlState('right',false);bot.setControlState('left',true)};break;
+	case 'right': {bot.setControlState('left',false);bot.setControlState('right',true)};break;
+	case 'stop': {bot.setControlState('left',false);bot.setControlState('right',false);
+	bot.setControlState('forward',false);bot.setControlState('back',false);};break;
     }
     if (msg.startsWith('!diff ')) {
         let diff = msg.slice(6);if(['noob','easy','normal','hard','hacker'].includes(diff)) {botstat.diff=diff;log(`Diff is now ${diff}`)} 
@@ -63,9 +69,10 @@ bot.on('chat', (username, msg, translate, jsonMsg, matches) => {
     }
 })
 function botloop() {
+    if(bot.food<16) eat(bot) //eats if get hunger
     if (botstat.moving === 1) { //if moves
         let pos, dist, dir
-        let ent = bot.nearestEntity(entity => { if (['mob', 'player'].includes(entity.type)) { return 1 } else { return 0 } })//only mob and players
+        let ent = bot.nearestEntity(entity => { if (['Projectiles','Drops'].includes(entity.kind)) { return 0 } else { return 1 } })//only mob and players
         if (botstat.cd === 0) { bot.setControlState('sprint', true); bot.setControlState('forward', true); }    //toggles sprint by status
         else { bot.setControlState('forward', false); bot.setControlState('sprint', false) }
         if (botstat.jump === 0) { bot.setControlState('jump', false) } else { bot.setControlState('jump', true) }//toggles sprint by status
@@ -91,24 +98,28 @@ function botloop() {
                 }
             }
             if (rand(1,false) < diffdata['chances'][botstat.diff]) bot.lookAt(pos)   //looks at player based on chances
-            if(bot.food<16) eat(bot) //eats if get hunger
-        } else { /*log('no entity') */ }
+        } else { return setTimeout(botloop,100)/*log('no entity') */ }
     } else {bot.setControlState('forward', false)} // WASN+t ELSE HERE
     bot.waitForTicks(2).then(botloop)
-}
+};log('test')
 function eat(bot) {
-    if(!bot) return
-    if(botstat.eat==1) return
-    let firstitem = bot.heldItem
-    let attack = botstat.attack
-    bot.inventory.items().forEach(item => {
+    if(!bot) return;
+    if(botstat.eat==1) return ; 
+    let firstitem = bot.heldItem; 
+    let attack = botstat.attack;
+	let items = bot.inventory.items()
+	items.forEach(item => {
         ['cooked', 'raw', 'apple'].forEach(foods => {   //types of food
             if (item.name.includes(foods)) {
-                bot.equip(item); bot.activateItem(); botstat.attack = 0;botstat.eat=1
+                bot.equip(item); 
+				if(item) {bot.activateItem();bot.activateItem(true)}
+				botstat.attack = 0;botstat.eat=1 
                 bot.waitForTicks(45).then(() => { if (firstitem) bot.equip(firstitem); botstat.attack = attack;botstat.eat=0})
             }
         })
     })
+	{bot.activateItem(true);botstat.attack = 0;botstat.eat=1 ;log(6)
+                bot.waitForTicks(45).then(() => { if (firstitem) bot.equip(firstitem); botstat.attack = attack;botstat.eat=0})}
 }
 bot.on('kicked', (e) => { log(e) })
 bot.on('еrror', (e) => { log(e) })
