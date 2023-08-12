@@ -6,7 +6,7 @@ let options = JSON.parse(fs.readFileSync("botoptions.txt"))
 const bot = mf.createBot(options)
 if(!bot) console.log("Error in creating bot")
 let newpvp = (bot.protocolVersion>47) ? true : false
-let botstat = { moving: 0, attack: 0, cd: 0, diff: 'normal', strafe: 0, spcd: 0, jump: 0, eat:0, delay:10}
+let botstat = { moving: 0, attack: 0, cd: 0, diff: 'normal', strafe: 0, spcd: 0, jump: 0, eat:0, delay:10, swaphand:0}
 
 function rand(max, round = true) { return (round == 0) ? max * Math.random() : Math.round(max * Math.random()) }
 let log = console.log
@@ -40,6 +40,9 @@ bot.on('chat', (username, msg, translate, jsonMsg, matches) => {
         case '!attackn':
             botstat.attack = 0; log('not attacking')
             break;
+		case '!offhand':
+			bot.moveSlotItem(bot.getEquipmentDestSlot('hand'),bot.getEquipmentDestSlot('off-hand'))
+			break;
         case '!equip':
             bot.inventory.items().forEach(async (item) => {
                 if (item.name.includes('boots')) bot.waitForTicks(0).then(() => { bot.equip(item, 'feet').catch(()=>{}) })
