@@ -1,1 +1,1 @@
-cmd /k node ./botfile.js
+node ./botfile.js
