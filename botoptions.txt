@@ -1,6 +1,9 @@
 {
 	"host":"localhost",
 	"port":"55067",
-	"username":"bot",
-	"healAt": "10"
+	"username":"bot2",
+	"healAt": "12",
+	"foodAt": "19",
+	"enablePlayers": false,
+	"enableMobs": true
 }

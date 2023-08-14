@@ -1,31 +1,33 @@
 const mf = require("mineflayer")
-const vec3 = require("vec3")
-const fs = require("fs")
+	const vec3 = require("vec3")
+	const fs = require("fs")
 
-let options = JSON.parse(fs.readFileSync("botoptions.txt"))
-const bot = mf.createBot(options)
-let newpvp = 0
-if (!bot)
-	return console.log("Error in creating bot")
-let botstat = {
-	moving: 0,
-	attack: 0,
-	cd: 0,
-	diff: 'normal',
-	strafe: 0,
-	spcd: 0,
-	jump: 0,
-	eat: 0,
-	delay: 10,
-	autojump: 1
-}
+	let options = JSON.parse(fs.readFileSync("botoptions.txt"))
+	if (!options)
+		return log('Couldnt get options')
+		const bot = mf.createBot(options)
+			let newpvp = 0
+			if (!bot)
+				return console.log("Error in creating bot")
+				let botstat = {
+					moving: 0,
+					attack: 0,
+					cd: 0,
+					diff: 'normal',
+					strafe: 0,
+					spcd: 0,
+					jump: 0,
+					eat: 0,
+					delay: 10,
+					autojump: 1
+				}
 
-function rand(max, round = true) {
-	return (round == 0) ? max * Math.random() : Math.round(max * Math.random())
-}
-let log = console.log
+		function rand(max, round = true) {
+			return (round == 0) ? max * Math.random() : Math.round(max * Math.random())
+		}
+	let log = console.log
 
-let diffdata = {
+	let diffdata = {
 	'reach': {
 		'noob': 1.5,
 		'easy': 1.889,
@@ -37,7 +39,7 @@ let diffdata = {
 		'noob': 0,
 		'easy': 0.0,
 		'normal': 0.0,
-		'hard': 0.35,
+		'hard': 0.15,
 		'hacker': 0
 	},
 	'crit': {
@@ -69,99 +71,99 @@ bot.on('whisper', (username, message, translate, jsonMsg, matches) => {
 bot.on('chat', (username, msg, translate, jsonMsg, matches) => {
 	console.log("Client message: " + msg)
 	switch (msg.toLowerCase()) {
-		case '!move':
-			botstat.moving = 1;
-			log('moving')
-			break;
-		case '!moven':
-			botstat.moving = 0;
-			log('not moving')
-			break;
-		case '!bye':
-			log('exiting...');
-			process.exit();
-			break;
-		case '!attack':
-			botstat.attack = 1;
-			bot.inventory.items().forEach(async (item) => {
-				if (item.name.includes('sword') || item.name.includes('axe'))
-					bot.waitForTicks(16).then(() => {
-						bot.equip(item, 'hand').catch(() => { })
-					})
-			})
-			log('attacking')
-			break;
-		case '!attackn':
-			botstat.attack = 0;
-			log('not attacking')
-			break;
-		case '!offhand':
-			bot.moveSlotItem(bot.getEquipmentDestSlot('hand'), bot.getEquipmentDestSlot('off-hand'))
-			break;
-		case '!autojump':
-			botstat.autojump = 1;
-			break;
-		case '!autojumpn':
-			botstat.autojump = 0;
-			break;
-		case '!equip':
-			bot.inventory.items().forEach(async (item) => {
-				if (item.name.includes('boots'))
-					bot.waitForTicks(0).then(() => {
-						bot.equip(item, 'feet').catch(() => { })
-					})
+	case '!move':
+		botstat.moving = 1;
+		log('moving')
+		break;
+	case '!moven':
+		botstat.moving = 0;
+		log('not moving')
+		break;
+	case '!bye':
+		log('exiting...');
+		process.exit();
+		break;
+	case '!attack':
+		botstat.attack = 1;
+		bot.inventory.items().forEach(async(item) => {
+			if (item.name.includes('sword') || item.name.includes('axe'))
+				bot.waitForTicks(16).then(() => {
+					bot.equip(item, 'hand').catch(() => {})
+				})
+		})
+		log('attacking')
+		break;
+	case '!attackn':
+		botstat.attack = 0;
+		log('not attacking')
+		break;
+	case '!offhand':
+		bot.moveSlotItem(bot.getEquipmentDestSlot('hand'), bot.getEquipmentDestSlot('off-hand'))
+		break;
+	case '!autojump':
+		botstat.autojump = 1;
+		break;
+	case '!autojumpn':
+		botstat.autojump = 0;
+		break;
+	case '!equip':
+		bot.inventory.items().forEach(async(item) => {
+			if (item.name.includes('boots'))
+				bot.waitForTicks(0).then(() => {
+					bot.equip(item, 'feet').catch(() => {})
+				})
 				if (item.name.includes('leggings'))
 					bot.waitForTicks(4).then(() => {
-						bot.equip(item, 'legs').catch(() => { })
+						bot.equip(item, 'legs').catch(() => {})
 					})
-				if (item.name.includes('chestplate'))
-					bot.waitForTicks(8).then(() => {
-						bot.equip(item, 'torso').catch(() => { })
-					})
-				if (item.name.includes('helmet'))
-					bot.waitForTicks(12).then(() => {
-						bot.equip(item, 'head').catch(() => { })
-					})
-				if (item.name.includes('sword') || item.name.includes('axe'))
-					bot.waitForTicks(16).then(() => {
-						bot.equip(item, 'hand').catch(() => { })
-					})
-				if (item.name.includes('totem') || item.name.includes('shield'))
-					bot.waitForTicks(20).then(() => {
-						bot.equip(item, 'off-hand').catch(() => { })
-					})
-			})
-			break;
-		case '!eat':
-			eat(bot);
-			break;
-		case 'up': {
+					if (item.name.includes('chestplate'))
+						bot.waitForTicks(8).then(() => {
+							bot.equip(item, 'torso').catch(() => {})
+						})
+						if (item.name.includes('helmet'))
+							bot.waitForTicks(12).then(() => {
+								bot.equip(item, 'head').catch(() => {})
+							})
+							if (item.name.includes('sword') || item.name.includes('axe'))
+								bot.waitForTicks(16).then(() => {
+									bot.equip(item, 'hand').catch(() => {})
+								})
+								if (item.name.includes('totem') || item.name.includes('shield'))
+									bot.waitForTicks(20).then(() => {
+										bot.equip(item, 'off-hand').catch(() => {})
+									})
+		})
+		break;
+	case '!eat':
+		eat(bot);
+		break;
+	case 'up': {
 			bot.setControlState('back', false);
 			bot.setControlState('forward', true)
 		};
-			break;
-		case 'down': {
+		break;
+	case 'down': {
 			bot.setControlState('forward', false);
 			bot.setControlState('back', true)
 		};
-			break;
-		case 'left': {
+		break;
+	case 'left': {
 			bot.setControlState('right', false);
 			bot.setControlState('left', true)
 		};
-			break;
-		case 'right': {
+		break;
+	case 'right': {
 			bot.setControlState('left', false);
 			bot.setControlState('right', true)
 		};
-			break;
-		case 'stop': {
+		break;
+	case 'stop': {
 			bot.setControlState('left', false);
 			bot.setControlState('right', false);
 			bot.setControlState('forward', false);
 			bot.setControlState('back', false);
 		};
-			break;
+		break;
 	}
 	if (msg.startsWith('!diff ')) {
 		let diff = msg.slice(6);
@@ -187,171 +189,224 @@ bot.on('chat', (username, msg, translate, jsonMsg, matches) => {
 //numbers from 0 to 1000
 let IDs = []
 let eatonce = 1
-for (let i = 1; i < 1000; i++) {
-	IDs[i] = i
-}
-let block;
+	for (let i = 1; i < 1000; i++) {
+		IDs[i] = i
+	}
+	let block;
 function botloop() {
 	if (!bot.entity)
 		return;
-	if (bot.food < 16) {
+	if (bot.food <= (options.foodAt || 18)) {
 		eat(bot)
 	} //eats if get hunger
-	if (bot.health < (options.healAt || 12)) {
+	if (bot.health <= (options.healAt || 12)) {
 		eat(bot)
 	}
 	if (botstat.moving === 1) { //if (moves)
 		let pos,
-			dist,
-			dir
+		dist,
+		dir;
 		let ent = bot.nearestEntity(entity => {
-			if (['player'].includes(entity.type) || ['Passive mobs', 'Hostile mobs'].includes(entity.kind)) {
+			if (['player'].includes(entity.type) && options.enablePlayers) {
 				if (entity.position.y > -3.5 + bot.entity.position.y)
-					return 1
-			} else {
-				return 0
+					return 1;
+			} 
+			if (['Passive mobs', 'Hostile mobs'].includes(entity.kind) && options.enableMobs) {
+				if (entity.position.y > -3.5 + bot.entity.position.y)
+					return 1;
 			}
 		}) //only mob and players
-		if (botstat.cd === 0) {
-			bot.setControlState('sprint', true);
-			bot.setControlState('forward', true);
-		} //toggles sprint by status
-		else {
-			bot.setControlState('forward', false);
-			bot.setControlState('sprint', false)
-		}
-		//let block = bot.findBlock({matching:IDs,useExtraInfo:(bl)=>{if(bl) if(bl.position.y>=bot.entity.position.y) return true},maxDistance:4})
-		for (let i = -2; i <= 2; i += 2) {
-			for (let j = -2; j <= 2; j += 2) {
-				let tempbl = bot.blockAt(vec3(bot.entity.position.x + i, bot.entity.position.y, bot.entity.position.z + j))
-				if (tempbl) {
-					if (tempbl.name !== 'air') {
-						block = tempbl
-					}
+		if(!ent) return setTimeout(botloop,100);
+			if (botstat.cd === 0) {
+				bot.setControlState('sprint', true);
+				bot.setControlState('forward', true);
+			} //toggles sprint by status
+			else {
+				bot.setControlState('forward', false);
+				bot.setControlState('sprint', false)
+			}
+			//let block = bot.findBlock({matching:IDs,useExtraInfo:(bl)=>{if(bl) if(bl.position.y>=bot.entity.position.y) return true},maxDistance:4})
+			for (let i = -2; i <= 2; i += 2) {
+				for (let j = -2; j <= 2; j += 2) {
+					let tempbl = bot.blockAt(vec3(bot.entity.position.x + i, bot.entity.position.y, bot.entity.position.z + j))
+						if (tempbl) {
+							if (tempbl.name !== 'air') {
+								block = tempbl
+							}
+						}
 				}
 			}
-		}
-		//log(block?.name+","+block?.position?.y+","+bot.entity.position.y)
-		if (botstat.autojump)
-			if (block) //experimental feature
-			{
-				bot.setControlState('jump', true)
-				block = null
+			//log(block?.name+","+block?.position?.y+","+bot.entity.position.y)
+			if (botstat.autojump)
+				if (block) //experimental feature
+				{
+					bot.setControlState('jump', true)
+					block = null
+				} else {
+					bot.setControlState('jump', false)
+				}
+			/*if (botstat.autoeat) {
+			if (botstat.eat)
+			if (eatonce)
+			if (ent.position.distanceTo(bot.player.entity.position) < 6) {
+			bot.look(bot.entity.yaw + Math.PI, bot.entity.pitch, true)
+			eatonce = 0
 			} else {
+			bot.look(bot.entity.yaw - Math.PI, bot.entity.pitch,true)
+			eatonce = 1
+			}
+			}*/
+			if (botstat.jump === 0) {
 				bot.setControlState('jump', false)
-			}
-		/*if (botstat.autoeat) {
-		if (botstat.eat)
-		if (eatonce)
-		if (ent.position.distanceTo(bot.player.entity.position) < 6) {
-		bot.look(bot.entity.yaw + Math.PI, bot.entity.pitch, true)
-		eatonce = 0
-		} else {
-		bot.look(bot.entity.yaw - Math.PI, bot.entity.pitch,true)
-		eatonce = 1
-		}
-		}*/
-		if (botstat.jump === 0) {
-			bot.setControlState('jump', false)
-		} else {
-			bot.setControlState('jump', true)
-		} //toggles sprint by status
-		if (ent) { //entity found
-			pos = vec3(ent.position.x, ent.position.y, ent.position.z) //adjusted position, was y/2
-			if (bot.player.entity) {
-				dist = ent.position.distanceTo(bot.player.entity.position)
 			} else {
-				dist = 4
-			} //calculating reach
-			if (botstat.attack == 1) { //if attacking is enabled
-				if (botstat.strafe === 0 && dist < (diffdata['reach'][botstat.diff]) + rand(3, false)) {
-					dir = ['left', 'right'][rand(1)]//random side
-					bot.setControlState(dir, true); //strafe
-					botstat.strafe = 1
-					bot.waitForTicks(rand(25) + 5).then(() => { //reset side
-						bot.setControlState(dir, false)
-						botstat.strafe = 0
-					})
-				} //else {botstat.strafe = 0}
-				if (botstat.cd === 0 && dist < diffdata['reach'][botstat.diff]) { //no hit cd and in reach
-					if (rand(1, 0) < diffdata['jump'][botstat.diff]) {
-						botstat.jump = 1
+				bot.setControlState('jump', true)
+			} //toggles sprint by status
+			if (ent) { //entity found
+				pos = vec3(ent.position.x, ent.position.y, ent.position.z) //adjusted position, was y/2
+					if (bot.player.entity) {
+						dist = ent.position.distanceTo(bot.player.entity.position)
 					} else {
-						botstat.jump = 0
+						dist = 4
+					} //calculating reach
+					if (botstat.attack == 1) { //if attacking is enabled
+						if (botstat.strafe === 0 && dist < (diffdata['reach'][botstat.diff]) + rand(3, false)) {
+							dir = ['left', 'right'][rand(1)]//random side
+							bot.setControlState(dir, true); //strafe
+							botstat.strafe = 1
+								bot.waitForTicks(rand(25) + 5).then(() => { //reset side
+								bot.setControlState(dir, false)
+								botstat.strafe = 0
+							})
+						} //else {botstat.strafe = 0}
+						if (botstat.cd === 0 && dist < diffdata['reach'][botstat.diff]) { //no hit cd and in reach
+							if (rand(1, 0) < diffdata['jump'][botstat.diff]) {
+								botstat.jump = 1
+							} else {
+								botstat.jump = 0
+							}
+							if (rand(1, 0) < diffdata['crit'][botstat.diff] && bot.entity.velocity.y < -0.15 && newpvp == true) {
+								bot.setControlState('sprint', false);
+							} //Stops sprint if attacking (1.9+)
+							if (newpvp == true) {
+								bot.delay = 5 + rand(2, true)
+							} else {
+								bot.delay = 1 + rand(2, true)
+							} //adjsust hit delay
+							if (rand(1, false) < Math.pow(diffdata['chances'][botstat.diff], 0.4)) {
+								bot.attack(ent);
+							}
+							botstat.cd = 1;
+							botstat.spcd = 1
+								bot.waitForTicks(botstat.delay).then(() => {
+								botstat.cd = 0;
+								botstat.spcd = 0
+							})
+								//puts hit cd and stops sprint
+						}
 					}
-					if (rand(1, 0) < diffdata['crit'][botstat.diff] && bot.entity.velocity.y < -0.15 && newpvp == true) {
-						bot.setControlState('sprint', false);
-					} //Stops sprint if attacking (1.9+)
-					if (newpvp == true) {
-						bot.delay = 5 + rand(2, true)
-					} else {
-						bot.delay = 1 + rand(2, true)
-					} //adjsust hit delay
-					if (rand(1, false) < Math.pow(diffdata['chances'][botstat.diff], 0.4)) {
-						bot.attack(ent);
-					}
-					botstat.cd = 1;
-					botstat.spcd = 1
-					bot.waitForTicks(botstat.delay).then(() => {
-						botstat.cd = 0;
-						botstat.spcd = 0
-					})
-					//puts hit cd and stops sprint
-				}
+					if (rand(1, false) < diffdata['chances'][botstat.diff]) {
+
+						bot.lookAt(pos, true)
+
+					} //looks at player based on chances
+			} else {
+				return setTimeout(botloop, 100) /*log('no entity') */
 			}
-			if (rand(1, false) < diffdata['chances'][botstat.diff]) {
-
-				bot.lookAt(pos, true)
-
-			} //looks at player based on chances
-		} else {
-			return setTimeout(botloop, 100) /*log('no entity') */
-		}
 	} else {
 		bot.setControlState('forward', false)
 	} // WASN+t ELSE HERE
 	bot.waitForTicks(2).then(botloop)
 };
-function eat(bot) {
-	if (!bot)
-		return 0;
-	if (botstat.eat === 1) {
-		return 0;
-	}	//stop trying to eat again
-	let attack = botstat.attack;
-	let items = bot.inventory.slots;
-	let firstitem = null;
-	items.forEach(i=>{if(i) if(i.name.includes('sword')) {firstitem = i}})
-	items.forEach(item => {
-		if (item) {
-			['golden_apple', 'cooked', 'raw'].forEach(food => {
-				if (item.name.includes(food)) {
-					if(bot.food===20 && !item.name.includes('golden_apple')) return eat(bot);
-					botstat.eat = 1
-					botstat.attack = 0
-					if (newpvp) {	//1.9;botstat.eat = 1;
-						bot.equip(item,'off-hand').catch(e=>{}).then(() => {
-							bot.activateItem(true);bot.setControlState('sneak',true)
-							bot.waitForTicks(40).then(() => {
-								bot.deactivateItem(); botstat.eat = 0
-								botstat.attack = attack;bot.setControlState('sneak',false)
-							})
-						}).catch(e => { })
-					} else {	//1.8
-						bot.equip(item).catch(e=>{}).then(() => {
-							bot.activateItem();bot.setControlState('sneak',true)
-							bot.waitForTicks(40).then(() => {
-								bot.deactivateItem(); botstat.eat = 0;bot.equip(firstitem).catch(log);bot.setControlState('sneak',false)
-								botstat.attack = attack; 
-							})
-						}).catch(e => { })
-					}; return
-				}
-			})
-		};
-	})
+/*function eat(bot) {
+if (!bot)
+return 0;
+if (botstat.eat === 1) {
+return 0;
+}	//stop trying to eat again
+let attack = botstat.attack;
+let items = bot.inventory.slots;
+let firstitem = null;
+items.forEach(i=>{if(i) if(i.name.includes('sword')) {firstitem = i}})
+items.forEach(item => {
+if (item) {
+['golden_apple', 'cooked', 'raw'].forEach(food => {
+if (item.name.includes(food)) {
+if(bot.food===20 && !item.name.includes('golden_apple')) return eat(bot);
+botstat.eat = 1
+botstat.attack = 0
+if (newpvp) {	//1.9;botstat.eat = 1;
+bot.equip(item,'off-hand').catch(e=>{}).then(() => {
+bot.activateItem(true);bot.setControlState('sneak',true)
+bot.waitForTicks(40).then(() => {
+bot.deactivateItem(); botstat.eat = 0
+botstat.attack = attack;bot.setControlState('sneak',false)
+})
+}).catch(e => { })
+} else {	//1.8
+bot.equip(item).catch(e=>{}).then(() => {
+bot.activateItem();bot.setControlState('sneak',true)
+bot.waitForTicks(40).then(() => {
+bot.deactivateItem(); botstat.eat = 0;bot.equip(firstitem).catch(log);bot.setControlState('sneak',false)
+botstat.attack = attack;
+})
+}).catch(e => { })
+}; return
 }
-
+})
+};
+})
+}*/
+function eat(bot) {
+	if (!bot || botstat.eat)
+		return;
+	let attack = botstat.attack;
+	let firstitem = bot.heldItem;
+	let item
+	let items = bot.inventory.slots; //inventory slots
+	let items2 = [];
+	let food = ['golden_apple', 'cooked', 'raw'];
+	for (let i = 0; i < food.length; i++) { //for every food
+		items.forEach((item) => {
+			if (item) //only if slot isnt empty if(!item) return would stop searching
+				if (item.name.includes(food[i])) {
+					items2.push(item); //pushes items by gapp > cooked > raw
+				}
+		})
+	}
+	if (items2.length === 0)
+		return log('empty inv'); //if empty inv
+	if (!items2[0].name.includes('golden_apple') && bot.food === 20)
+		return; //if not hungry and not using gapple
+	{ //eating!
+		item = items2[0];
+		botstat.eat = 1;
+		botstat.attack = 0; //if founds item to eat it has to run eat cooldown
+		if (newpvp) { //1.9;
+			bot.equip(item, 'off-hand').catch(e => {}).then(() => {
+				bot.activateItem(true);
+				bot.setControlState('sneak', true);
+				bot.waitForTicks(40).then(() => {
+					bot.deactivateItem();
+					botstat.eat = 0;
+					botstat.attack = attack;
+					bot.setControlState('sneak', false);
+				})
+			}).catch(e => {})
+		} else { //1.8
+			bot.equip(item).catch(e => {}).then(() => {
+				bot.activateItem();
+				bot.setControlState('sneak', true)
+				bot.waitForTicks(40).then(() => {
+					bot.deactivateItem();
+					botstat.eat = 0;
+					bot.equip(firstitem).catch(log);
+					bot.setControlState('sneak', false);
+					botstat.attack = attack;
+				})
+			}).catch(e => {});
+		}
+	}
+}
 bot.on('kicked', (e) => {
 	log(e)
 })
